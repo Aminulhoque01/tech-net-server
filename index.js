@@ -9,7 +9,9 @@ const cors = require('cors');
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.euxm4cs.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.8qoxdwe.mongodb.net/?retryWrites=true&w=majority`;
+
+
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -38,9 +40,9 @@ const run = async () => {
 
     app.get('/product/:id', async (req, res) => {
       const id = req.params.id;
-
+      // console.log(id)
       const result = await productCollection.findOne({ _id: ObjectId(id) });
-      console.log(result);
+      // console.log(result);
       res.send(result);
     });
 
@@ -55,15 +57,17 @@ const run = async () => {
     app.post('/comment/:id', async (req, res) => {
       const productId = req.params.id;
       const comment = req.body.comment;
-
       console.log(productId);
       console.log(comment);
+
+    
 
       const result = await productCollection.updateOne(
         { _id: ObjectId(productId) },
         { $push: { comments: comment } }
       );
 
+      
       console.log(result);
 
       if (result.modifiedCount !== 1) {
